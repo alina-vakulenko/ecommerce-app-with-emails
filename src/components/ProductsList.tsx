@@ -1,43 +1,19 @@
-import { useEffect, useState } from "react";
-import { ProductList } from "../types/product";
-import ProductsService from "../api/ProductsService";
+import { Link } from "react-router-dom";
+import { ProductList } from "@/types/product";
 import ProductCard from "./ProductCard";
 
-const ProductsList = () => {
-  const [products, setProducts] = useState<ProductList>([]);
-  const [status, setStatus] = useState<
-    "loading" | "failed" | "success" | "idle"
-  >("idle");
-  const [errMessage, setErrMessage] = useState("");
+interface ProductsListProps {
+  products: ProductList;
+}
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setStatus("loading");
-      try {
-        const res = await ProductsService.getAllProducts();
-        setProducts(res.data);
-      } catch (err) {
-        setStatus("failed");
-        setErrMessage("Error loading products");
-      } finally {
-        setStatus("idle");
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  if (status === "loading") {
-    return <div>LOADING</div>;
-  }
-  if (status === "failed") {
-    return <div>{errMessage}</div>;
-  }
+const ProductsList = ({ products }: ProductsListProps) => {
   return products.length > 0 ? (
-    <ul>
+    <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-16">
       {products.map((product) => (
         <li key={product.id}>
-          <ProductCard data={product} />
+          <Link to={`products/${product.id}`}>
+            <ProductCard data={product} />
+          </Link>
         </li>
       ))}
     </ul>

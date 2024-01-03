@@ -1,10 +1,18 @@
-import ProductsList from "../components/ProductsList";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/Navbar";
+import MaxWidthWrapper from "../components/MaxWidthWrapper";
 
 const RootPage = () => {
   return (
     <div>
-      HOME
-      <ProductsList />
+      <header className="mb-16">
+        <Navbar />
+      </header>
+      <main>
+        <MaxWidthWrapper>
+          <Outlet />
+        </MaxWidthWrapper>
+      </main>
     </div>
   );
 };
