@@ -2,6 +2,7 @@ import { ShoppingCart } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   return (
@@ -16,9 +17,15 @@ const Navbar = () => {
             <>
               <NavLink
                 to="/cart"
-                className={buttonVariants({ variant: "ghost", size: "sm" })}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "relative"
+                )}
               >
-                <ShoppingCart className="w-4 h-4" />
+                <ShoppingCart className="w-6 h-6" />
+                <div className="absolute top-0 right-1 text-[10px] bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center">
+                  {5}
+                </div>
               </NavLink>
             </>
           </div>
