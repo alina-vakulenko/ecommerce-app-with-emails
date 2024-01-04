@@ -14,58 +14,55 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import Sidebar from "@/components/Sidebar";
+import { usePagination } from "./usePagination";
 
 const PRODUCTS_PER_PAGE = 6;
 
 const ProductsPage = () => {
-  const [currPage, setCurrPage] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
-  const products = useLoaderData() as ProductList;
+  const { products, categories } = useLoaderData() as {
+    products: ProductList;
+    categories: string[];
+  };
   const [filteredProducts, setFilteredProducts] =
     useState<ProductList>(products);
 
-  const startIndex = (currPage - 1) * PRODUCTS_PER_PAGE;
-  const endIndex = startIndex + PRODUCTS_PER_PAGE;
-  const totalPages = Math.ceil(products.length / PRODUCTS_PER_PAGE);
+  const {
+    setCurrPage,
+    paginatedItems: paginatedProducts,
+    totalPages,
+    currPage,
+    handleNextPage,
+    handlePrevPage,
+    handlePageChange,
+  } = usePagination({
+    perPage: PRODUCTS_PER_PAGE,
+    items: filteredProducts,
+  });
 
   useEffect(() => {
-    let filterTimeout: ReturnType<typeof setTimeout> | null = null;
+    let searchFilterTimeout: ReturnType<typeof setTimeout> | null = null;
+    const query = searchParams.get("q");
 
     const filterProducts = () => {
-      filterTimeout && clearTimeout(filterTimeout);
-
-      const query = searchParams.get("q");
-      filterTimeout = setTimeout(() => {
-        setFilteredProducts((prev) =>
-          query
-            ? prev.filter((p) =>
-                p.title.toLowerCase().includes(query.trim().toLowerCase())
-              )
-            : prev
-        );
+      searchFilterTimeout && clearTimeout(searchFilterTimeout);
+      searchFilterTimeout = setTimeout(() => {
+        setCurrPage(1);
+        setFilteredProducts((prev) => {
+          return prev.filter((product) =>
+            product.title.toLowerCase().includes(query.trim().toLowerCase())
+          );
+        });
       }, 500);
     };
 
-    filterProducts();
-  }, [searchParams]);
-
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-
-  const handlePageChange = (page: number) => {
-    setCurrPage(page);
-  };
-
-  const handleNextPage = () => {
-    if (currPage < totalPages) {
-      setCurrPage(currPage + 1);
+    if (query) {
+      filterProducts();
+    } else {
+      setFilteredProducts(products);
     }
-  };
-
-  const handlePrevPage = () => {
-    if (currPage > 1) {
-      setCurrPage(currPage - 1);
-    }
-  };
+  }, [searchParams, setCurrPage, products]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
@@ -79,66 +76,98 @@ const ProductsPage = () => {
     });
   };
 
+  const handleCategoryClick = (category: string) => {
+    setSearchParams((params) => {
+      if (category) {
+        params.set("category", category.toLowerCase());
+      } else {
+        params.delete("category");
+      }
+      return params;
+    });
+  };
+
   return (
-    <div className="flex flex-col h-[calc(100vh-130px)]">
-      <div className="flex w-full max-w-sm items-center space-x-2 mb-8">
-        <Input
-          type="text"
-          placeholder="Search by name"
-          value={searchParams.get("q") || ""}
-          onChange={handleSearch}
-        />
-        <Button type="submit" aria-label="Search products by name">
-          <Search />
-        </Button>
+    <div className="grid lg:grid-cols-5">
+      <Sidebar
+        categories={categories}
+        onCategoryClick={handleCategoryClick}
+        className="hidden lg:block shadow-lg"
+      />
+      <div className="col-span-3 lg:col-span-4">
+        <div className="flex flex-col h-[calc(100vh-130px)]">
+          <div className="ml-auto flex w-full max-w-sm items-center space-x-2 mb-8">
+            <Input
+              type="text"
+              placeholder="Search by name"
+              value={searchParams.get("q") || ""}
+              onChange={handleSearch}
+            />
+            <Button type="submit" aria-label="Search products by name">
+              <Search />
+            </Button>
+          </div>
+          {paginatedProducts.length === 0 ? (
+            <h2 className="text-center font-semibold text-2xl">
+              Products not found
+            </h2>
+          ) : (
+            <ProductsList products={paginatedProducts} />
+          )}
+
+          <Pagination className="mt-auto mb-4">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious onClick={handlePrevPage} />
+              </PaginationItem>
+
+              {[...Array(totalPages)].map((_, index) => (
+                <PaginationItem
+                  key={index}
+                  className={
+                    currPage === index + 1 ? "bg-zinc-200 rounded-md" : ""
+                  }
+                >
+                  <PaginationLink
+                    onClick={() => handlePageChange(index + 1)}
+                    // active={currPage === index + 1}
+                  >
+                    {index + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <PaginationNext onClick={handleNextPage} />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </div>
-      {paginatedProducts.length === 0 ? (
-        <h2 className="text-center font-semibold text-2xl">
-          Products not found
-        </h2>
-      ) : (
-        <ProductsList products={paginatedProducts} />
-      )}
-
-      <Pagination className="mt-auto mb-4">
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious onClick={handlePrevPage} />
-          </PaginationItem>
-
-          {[...Array(totalPages)].map((_, index) => (
-            <PaginationItem
-              key={index}
-              className={currPage === index + 1 ? "bg-zinc-200 rounded-md" : ""}
-            >
-              <PaginationLink
-                onClick={() => handlePageChange(index + 1)}
-                // active={currPage === index + 1}
-              >
-                {index + 1}
-              </PaginationLink>
-            </PaginationItem>
-          ))}
-          <PaginationItem>
-            <PaginationNext onClick={handleNextPage} />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
     </div>
   );
 };
 
 export default ProductsPage;
 
-export const productsLoader = async () => {
+export const productsLoader = async ({ request }) => {
+  const category = new URL(request.url).searchParams.get("category");
   try {
-    const res = await ProductsService.getAllProducts();
-    console.log(res);
-    if (!res.data) {
+    const productsResponse = category
+      ? await ProductsService.getProductsByCategory(category)
+      : await ProductsService.getAllProducts();
+    const categoriesResponse = await ProductsService.getAllCategories();
+
+    if (!productsResponse.data) {
       throw Error("Error loading products");
     }
-    return res.data;
+    if (!categoriesResponse.data) {
+      throw Error("Error loading categories");
+    }
+    return {
+      products: productsResponse.data,
+      categories: categoriesResponse.data,
+    };
   } catch (err) {
-    throw Error("Error loading products");
+    throw Error("Error loading data");
   }
 };
