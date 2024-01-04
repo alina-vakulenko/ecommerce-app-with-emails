@@ -17,10 +17,14 @@ const ProductsErrorPage = () => {
     );
   } else if (error instanceof Error) {
     return (
-      <div className="flex flex-col items-center justify-center gap-3">
-        <h1 className="font-semibold text-4xl">Oops! Unexpected Error</h1>
-        <p className="text-2xl">Something went wrong.</p>
-        <p className="text-2xl text-destructive">
+      <div className="h-96 flex flex-col items-center sm:justify-center gap-3 text-center">
+        <h1 className="font-semibold text-2xl sm:text-4xl">
+          Oops! Unexpected Error
+        </h1>
+        <p className="text-xl sm:text-2xl text-muted-foreground">
+          Something went wrong.
+        </p>
+        <p className="text-xl sm:text2xl text-destructive">
           <i>{error.message}</i>
         </p>
       </div>

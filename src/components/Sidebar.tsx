@@ -4,10 +4,16 @@ import { ScrollArea } from "./ui/scroll-area";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   categories: string[];
+  activeCategory: string | null;
   onCategoryClick: (category: string) => void;
 }
 
-const Sidebar = ({ className, categories, onCategoryClick }: SidebarProps) => {
+const Sidebar = ({
+  className,
+  categories,
+  activeCategory,
+  onCategoryClick,
+}: SidebarProps) => {
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4">
@@ -21,7 +27,10 @@ const Sidebar = ({ className, categories, onCategoryClick }: SidebarProps) => {
                 <Button
                   key={`${category}-${i}`}
                   variant="ghost"
-                  className="w-full justify-start font-normal text-md capitalize"
+                  className={cn(
+                    "w-full justify-start font-normal text-md capitalize",
+                    category === activeCategory ? "bg-zinc-300" : ""
+                  )}
                   onClick={() => onCategoryClick(category)}
                 >
                   {category}

@@ -8,7 +8,7 @@ interface ProductsListProps {
 
 const ProductsList = ({ products }: ProductsListProps) => {
   return products.length > 0 ? (
-    <ul className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-16">
+    <ul className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 mb-16">
       {products.map((product) => (
         <li key={product.id}>
           <Link to={`products/${product.id}`}>

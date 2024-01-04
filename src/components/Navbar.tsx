@@ -3,8 +3,12 @@ import { NavLink } from "react-router-dom";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useAppSelector } from "@/redux/hooks";
+import { selectCart } from "@/redux/cartSlice";
 
 const Navbar = () => {
+  const { totalQuantity } = useAppSelector(selectCart);
+
   return (
     <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
@@ -12,8 +16,7 @@ const Navbar = () => {
           <NavLink to="/" className="flex z-40 font-semibold">
             Home
           </NavLink>
-          {/* TODO add mobile navbar */}
-          <div className="hidden items-center space-x-4 sm:flex">
+          <div className="items-center space-x-4 flex">
             <>
               <NavLink
                 to="/cart"
@@ -23,9 +26,11 @@ const Navbar = () => {
                 )}
               >
                 <ShoppingCart className="w-6 h-6" />
-                <div className="absolute top-0 right-1 text-[10px] bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center">
-                  {5}
-                </div>
+                {totalQuantity > 0 ? (
+                  <div className="absolute top-0 right-1 text-[10px] bg-primary text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center">
+                    {totalQuantity}
+                  </div>
+                ) : null}
               </NavLink>
             </>
           </div>

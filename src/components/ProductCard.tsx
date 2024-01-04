@@ -1,3 +1,5 @@
+import { useAppDispatch } from "@/redux/hooks";
+import { productAdded } from "@/redux/cartSlice";
 import { ProductItem } from "../types/product";
 import {
   Card,
@@ -7,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
 import { Button } from "./ui/button";
 
 interface ProductCardProps {
@@ -14,8 +17,20 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ data }: ProductCardProps) => {
+  const dispatch = useAppDispatch();
+  const { toast } = useToast();
+
+  const addToCart = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    dispatch(productAdded(data));
+    toast({
+      title: "Item added to the cart",
+      description: data.title,
+    });
+  };
+
   return (
-    <Card className="w-80 h-96 flex flex-col gap-1">
+    <Card className="w-72 h-96 flex flex-col gap-1">
       <CardHeader>
         <CardTitle className="truncate">{data.title}</CardTitle>
         <CardDescription className="ml-auto border border-zinc-200 rounded-md px-2 capitalize">
@@ -33,7 +48,9 @@ const ProductCard = ({ data }: ProductCardProps) => {
         <div className="font-semibold text-center mt-auto">{data.price}$</div>
       </CardContent>
       <CardFooter className="mt-auto">
-        <Button className="w-full">Buy</Button>
+        <Button onClick={addToCart} className="w-full">
+          Buy
+        </Button>
       </CardFooter>
     </Card>
   );

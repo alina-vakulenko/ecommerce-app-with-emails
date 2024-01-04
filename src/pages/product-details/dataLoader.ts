@@ -1,14 +1,4 @@
-import { useLoaderData, useParams } from "react-router-dom";
 import ProductsService from "@/api/ProductsService";
-import { ProductItem } from "@/types/product";
-
-const ProductDetailsPage = () => {
-  const { id } = useParams();
-  const product = useLoaderData() as ProductItem;
-  return <div>{product.title}</div>;
-};
-
-export default ProductDetailsPage;
 
 export const productDetailsLoader = async ({ params }) => {
   try {

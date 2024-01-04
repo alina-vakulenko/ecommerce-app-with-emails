@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import type { ProductList } from "@/types/product";
-import ProductsService from "@/api/ProductsService";
+import { usePagination } from "./usePagination";
 import ProductsList from "@/components/ProductsList";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +15,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Sidebar from "@/components/Sidebar";
-import { usePagination } from "./usePagination";
 
 const PRODUCTS_PER_PAGE = 6;
 
@@ -88,13 +87,14 @@ const ProductsPage = () => {
   };
 
   return (
-    <div className="grid lg:grid-cols-5">
+    <div className="grid gap-4 lg:grid-cols-5">
       <Sidebar
         categories={categories}
+        activeCategory={searchParams.get("category")}
         onCategoryClick={handleCategoryClick}
-        className="hidden lg:block shadow-lg"
+        className="hidden lg:block shadow-lg h-screen"
       />
-      <div className="col-span-3 lg:col-span-4">
+      <div className="col-span-3">
         <div className="flex flex-col h-[calc(100vh-130px)]">
           <div className="ml-auto flex w-full max-w-sm items-center space-x-2 mb-8">
             <Input
@@ -148,26 +148,3 @@ const ProductsPage = () => {
 };
 
 export default ProductsPage;
-
-export const productsLoader = async ({ request }) => {
-  const category = new URL(request.url).searchParams.get("category");
-  try {
-    const productsResponse = category
-      ? await ProductsService.getProductsByCategory(category)
-      : await ProductsService.getAllProducts();
-    const categoriesResponse = await ProductsService.getAllCategories();
-
-    if (!productsResponse.data) {
-      throw Error("Error loading products");
-    }
-    if (!categoriesResponse.data) {
-      throw Error("Error loading categories");
-    }
-    return {
-      products: productsResponse.data,
-      categories: categoriesResponse.data,
-    };
-  } catch (err) {
-    throw Error("Error loading data");
-  }
-};

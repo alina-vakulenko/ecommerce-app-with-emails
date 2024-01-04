@@ -6,16 +6,21 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import RootPage from "./routes/root";
-import ProductsPage, { productsLoader } from "./routes/products";
-import ProductDetailsPage, {
-  productDetailsLoader,
-} from "./routes/productDetails";
-import CartPage from "./routes/cart";
-import OrderPage from "./routes/order";
-import ProductsErrorPage from "./routes/productsError";
-import ProductDetailsErrorPage from "./routes/productDetailsError";
-import NotFoundPage from "./routes/notFound";
+import { Provider } from "react-redux";
+
+import RootPage from "./pages/root";
+import ProductsPage from "./pages/products/products";
+import ProductDetailsPage from "./pages/product-details/productDetails";
+import CartPage from "./pages/cart/cart";
+import OrderPage from "./pages/order";
+import ProductsErrorPage from "./pages/products/productsError";
+import ProductDetailsErrorPage from "./pages/product-details/productDetailsError";
+import NotFoundPage from "./pages/notFound";
+
+import { store } from "./redux/store";
+import { productsLoader } from "./pages/products/dataLoader";
+import { productDetailsLoader } from "./pages/product-details/dataLoader";
+
 import "./index.css";
 
 const router = createBrowserRouter(
@@ -43,6 +48,8 @@ const router = createBrowserRouter(
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );
