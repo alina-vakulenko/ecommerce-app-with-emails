@@ -1,5 +1,6 @@
-import { axiosClient } from "./axios";
-import {
+import { axiosInstance } from "./axios";
+import type { Category } from "@/types/category";
+import type {
   CategoriesListResponse,
   ProductItemResponse,
   ProductsListResponse,
@@ -7,15 +8,15 @@ import {
 
 export default {
   getAllProducts: async (): ProductsListResponse => {
-    return await axiosClient.get("/products");
+    return await axiosInstance.get("/products");
   },
   getProductById: async (id: number): ProductItemResponse => {
-    return await axiosClient.get(`/products/${id}`);
+    return await axiosInstance.get(`/products/${id}`);
   },
   getAllCategories: async (): CategoriesListResponse => {
-    return await axiosClient.get("/products/categories");
+    return await axiosInstance.get("/products/categories");
   },
-  getProductsByCategory: async (category: string): ProductsListResponse => {
-    return await axiosClient.get(`/products/category/${category}`);
+  getProductsByCategory: async (category: Category): ProductsListResponse => {
+    return await axiosInstance.get(`/products/category/${category}`);
   },
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLoaderData, useSearchParams } from "react-router-dom";
 import { Search } from "lucide-react";
 import type { ProductList } from "@/types/product";
+import type { Category } from "@/types/category";
 import { usePagination } from "./usePagination";
 import ProductsList from "@/components/ProductsList";
 import { Button } from "@/components/ui/button";
@@ -22,7 +23,7 @@ const ProductsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const { products, categories } = useLoaderData() as {
     products: ProductList;
-    categories: string[];
+    categories: Category[];
   };
   const [filteredProducts, setFilteredProducts] =
     useState<ProductList>(products);
@@ -50,16 +51,16 @@ const ProductsPage = () => {
         setCurrPage(1);
         setFilteredProducts((prev) => {
           return prev.filter((product) =>
-            product.title.toLowerCase().includes(query.trim().toLowerCase())
+            product.title.toLowerCase().includes(query!.trim().toLowerCase())
           );
         });
       }, 500);
     };
 
-    if (query) {
-      filterProducts();
-    } else {
+    if (!query) {
       setFilteredProducts(products);
+    } else {
+      filterProducts();
     }
   }, [searchParams, setCurrPage, products]);
 
@@ -75,7 +76,7 @@ const ProductsPage = () => {
     });
   };
 
-  const handleCategoryClick = (category: string) => {
+  const handleCategoryClick = (category: Category) => {
     setSearchParams((params) => {
       if (category) {
         params.set("category", category.toLowerCase());

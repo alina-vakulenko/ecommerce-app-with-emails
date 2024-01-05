@@ -1,27 +1,26 @@
+import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { cartCleared, selectCart } from "@/redux/cartSlice";
-import { Button } from "@/components/ui/button";
-import CartItemCard from "@/components/cart-item/CartItem";
-import EmptyCartPage from "./empyCart";
-import { Separator } from "@/components/ui/separator";
-
+import { buttonVariants } from "@/components/ui/button";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import ClearCartAlerDialog from "../../components/ClearCartAlerDialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import ClearCartAlerDialog from "@/components/ClearCartAlerDialog";
+import EmptyCartPage from "./empyCart";
+import CartItems from "../../components/cart/CartItems";
+import CartTotals from "../../components/cart/CartTotals";
 
 const CartPage = () => {
   const dispatch = useAppDispatch();
-  const { cart, totalPrice, totalQuantity } = useAppSelector(selectCart);
-  const productsIds = Object.keys(cart);
+  const { totalPrice, totalQuantity } = useAppSelector(selectCart);
+
+  if (totalQuantity === 0) {
+    return <EmptyCartPage />;
+  }
 
   const clearCart = () => {
     dispatch(cartCleared());
   };
-
-  if (productsIds.length === 0) {
-    return <EmptyCartPage />;
-  }
 
   return (
     <MaxWidthWrapper>
@@ -30,33 +29,16 @@ const CartPage = () => {
         <ClearCartAlerDialog onConfirm={clearCart} />
       </header>
       <div className="grid grid-cols-[1.5fr_1fr] gap-8 mb-16">
-        <ScrollArea className="h-[600px] w-full rounded-md border p-8">
-          <ul className="flex flex-col gap-4 mb-8">
-            {productsIds.map((id) => (
-              <li key={id}>
-                <CartItemCard data={cart[Number(id)]} />
-              </li>
-            ))}
-          </ul>
-        </ScrollArea>
-        {/* <Separator orientation="vertical" className="mx-8" /> */}
+        <CartItems />
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col">
-            <span className="font-semibold text-lg">
-              Items in the cart: {totalQuantity}
-            </span>
-            <span className="font-semibold text-lg">
-              Amount to pay: {totalPrice}$
-            </span>
-          </div>
-          <Button
-            onClick={clearCart}
-            size="lg"
-            className="flex items-center gap-1"
+          <CartTotals totalQuantity={totalQuantity} totalPrice={totalPrice} />
+          <Link
+            to="/order"
+            className={cn(buttonVariants(), "flex items-center gap-1")}
           >
             Proceed to order
             <ArrowRight />
-          </Button>
+          </Link>
         </div>
       </div>
     </MaxWidthWrapper>

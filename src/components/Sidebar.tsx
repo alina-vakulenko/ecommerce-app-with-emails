@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
+import type { Category } from "@/types/category";
 import { Button } from "./ui/button";
 import { ScrollArea } from "./ui/scroll-area";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  categories: string[];
-  activeCategory: string | null;
-  onCategoryClick: (category: string) => void;
+  categories: Category[];
+  activeCategory: Category | null;
+  onCategoryClick: (category: Category) => void;
 }
 
 const Sidebar = ({

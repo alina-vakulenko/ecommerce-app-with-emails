@@ -1,10 +1,16 @@
+import { Category } from "./category";
+
 export interface ProductItem {
   id: number;
   title: string;
-  price: number;
-  category: string;
   description: string;
+  category: Category;
+  price: number;
   image: string;
+  rating: {
+    count: number;
+    rate: number;
+  };
 }
 
 export type ProductList = ProductItem[];

@@ -1,6 +1,6 @@
-import { useAppDispatch } from "@/redux/hooks";
-import { productAdded } from "@/redux/cartSlice";
-import { ProductItem } from "../types/product";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { productAdded, selectCart } from "@/redux/cartSlice";
+import type { ProductItem } from "@/types/product";
 import {
   Card,
   CardContent,
@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 interface ProductCardProps {
   data: ProductItem;
@@ -18,6 +18,9 @@ interface ProductCardProps {
 
 const ProductCard = ({ data }: ProductCardProps) => {
   const dispatch = useAppDispatch();
+  const { cart } = useAppSelector(selectCart);
+  const isInCart = Boolean(cart[data.id]);
+
   const { toast } = useToast();
 
   const addToCart = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -30,7 +33,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
   };
 
   return (
-    <Card className="w-72 h-96 flex flex-col gap-1">
+    <Card className="w-72 h-96 flex flex-col gap-1 hover:translate-y-1 transition-transform">
       <CardHeader>
         <CardTitle className="truncate">{data.title}</CardTitle>
         <CardDescription className="ml-auto border border-zinc-200 rounded-md px-2 capitalize">
@@ -49,7 +52,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
       </CardContent>
       <CardFooter className="mt-auto">
         <Button onClick={addToCart} className="w-full">
-          Buy
+          {isInCart ? "Add one more" : "Add to cart"}
         </Button>
       </CardFooter>
     </Card>

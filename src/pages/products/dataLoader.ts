@@ -1,6 +1,4 @@
 import ProductsService from "@/api/ProductsService";
-import { productsLoaded } from "@/redux/productsSlice";
-import { store } from "../../redux/store";
 
 export const productsLoader = async ({ request }: { request: Request }) => {
   const category = new URL(request.url).searchParams.get("category");
@@ -19,8 +17,6 @@ export const productsLoader = async ({ request }: { request: Request }) => {
 
     const { data: products } = productsResponse;
     const { data: categories } = categoriesResponse;
-
-    store.dispatch(productsLoaded(products));
 
     return {
       products,

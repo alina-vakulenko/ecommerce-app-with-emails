@@ -1,13 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
+import {
+  createSlice,
+  createSelector,
+  type PayloadAction,
+} from "@reduxjs/toolkit";
 import { RootState } from "./store";
-import { ProductItem } from "@/types/product";
+import type { ProductItem } from "@/types/product";
 
 export interface CartItem extends ProductItem {
   quantity: number;
 }
 
-type CartState = {
+export type CartState = {
   [productId: number]: CartItem;
 };
 
@@ -46,19 +49,20 @@ export const cartSlice = createSlice({
 
 export const { productAdded, productRemoved, cartCleared, quantityDecreased } =
   cartSlice.actions;
-export const selectCart = (state: RootState) => {
-  const cart = state.cart;
 
+const selectCartItems = (state: RootState) => state.cart;
+
+export const selectCart = createSelector([selectCartItems], (items) => {
   let totalQuantity = 0;
   let totalPrice = 0;
 
-  for (const itemId in cart) {
-    const item = cart[itemId];
+  for (const itemId in items) {
+    const item = items[itemId];
     totalQuantity += item.quantity;
     totalPrice += item.quantity * item.price;
   }
 
-  return { cart, totalQuantity, totalPrice: totalPrice.toFixed(2) };
-};
+  return { cart: items, totalQuantity, totalPrice: +totalPrice.toFixed(2) };
+});
 
 export default cartSlice.reducer;
