@@ -12,7 +12,7 @@ import RootPage from "./pages/root";
 import ProductsPage from "./pages/products/products";
 import ProductDetailsPage from "./pages/product-details/productDetails";
 import CartPage from "./pages/cart/cart";
-import OrderPage from "./pages/order";
+import OrderPage from "./pages/order/order";
 import ProductsErrorPage from "./pages/products/productsError";
 import ProductDetailsErrorPage from "./pages/product-details/productDetailsError";
 import NotFoundPage from "./pages/notFound";

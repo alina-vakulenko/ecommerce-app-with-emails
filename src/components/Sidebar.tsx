@@ -16,7 +16,7 @@ const Sidebar = ({
   onCategoryClick,
 }: SidebarProps) => {
   return (
-    <div className={cn("pb-12", className)}>
+    <div className={cn("py-12", className)}>
       <div className="space-y-4">
         <div className="py-4">
           <h2 className="relative px-7 text-lg font-semibold tracking-tight">

@@ -8,7 +8,7 @@ import type {
 
 export default {
   getAllProducts: async (): ProductsListResponse => {
-    return await axiosInstance.get("/products");
+    return axiosInstance.get("/products");
   },
   getProductById: async (id: number): ProductItemResponse => {
     return await axiosInstance.get(`/products/${id}`);
@@ -17,6 +17,6 @@ export default {
     return await axiosInstance.get("/products/categories");
   },
   getProductsByCategory: async (category: Category): ProductsListResponse => {
-    return await axiosInstance.get(`/products/category/${category}`);
+    return axiosInstance.get(`/products/category/${category}`);
   },
 };

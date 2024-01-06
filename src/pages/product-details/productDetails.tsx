@@ -26,7 +26,7 @@ const ProductDetailsPage = () => {
 
   return (
     <MaxWidthWrapper>
-      <div className="grid grid-col-auto sm:grid-cols-[1.5fr_1fr] gap-12 mb-16">
+      <div className="grid grid-col-auto sm:grid-cols-[1.5fr_1fr] gap-12 my-16">
         <div className="h-[200px] sm:h-[350px] lg:h-[500px]">
           <img
             src={product.image}
@@ -37,7 +37,7 @@ const ProductDetailsPage = () => {
         <div className="space-y-8">
           <div className="space-y-2">
             <h1 className="font-semibold text-2xl">{product.title}</h1>
-            <Badge variant="secondary" className="capitalize p-2">
+            <Badge variant="secondary" className="capitalize p-2 text-md">
               {product.category}
             </Badge>
           </div>
