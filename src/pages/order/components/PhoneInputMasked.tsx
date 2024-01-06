@@ -26,10 +26,10 @@ const PhoneInputMasked = ({ control }: PhoneInputProps) => {
             <InputMask
               {...field}
               mask="+999 (99) 999-99-99"
-              maskChar=" "
-              placeholder="+___ (__) ___-__-__"
+              maskPlaceholder="_"
+              alwaysShowMask
             >
-              <Input type="tel" />
+              <Input />
             </InputMask>
           </FormControl>
           <FormMessage />

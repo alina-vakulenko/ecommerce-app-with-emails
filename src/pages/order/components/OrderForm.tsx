@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import PhoneInputMasked from "./PhoneInputMasked";
+import { useEffect } from "react";
 
 const orderFormSchema = z.object({
   name: z
@@ -33,6 +34,8 @@ const orderFormSchema = z.object({
   ),
 });
 
+export const FORM_DATA_KEY = "order-form";
+
 export type FormInputs = z.infer<typeof orderFormSchema>;
 
 interface OrderFormProps {
@@ -40,14 +43,28 @@ interface OrderFormProps {
 }
 
 const OrderForm = ({ onSubmit }: OrderFormProps) => {
+  const data = localStorage.getItem(FORM_DATA_KEY);
+  const savedFormData = data ? JSON.parse(data) : null;
+
+  const initialValues = {
+    name: savedFormData?.name || "",
+    email: savedFormData?.email || "",
+    phone: !savedFormData?.phone
+      ? ""
+      : savedFormData.phone.includes("_")
+      ? ""
+      : savedFormData.phone,
+  };
+
   const form = useForm<FormInputs>({
     resolver: zodResolver(orderFormSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-    },
+    defaultValues: initialValues,
   });
+
+  const formValues = form.getValues();
+  useEffect(() => {
+    localStorage.setItem(FORM_DATA_KEY, JSON.stringify(formValues));
+  }, [formValues]);
 
   return (
     <Form {...form}>
@@ -99,7 +116,11 @@ const OrderForm = ({ onSubmit }: OrderFormProps) => {
           <Button
             type="submit"
             className="flex gap-1"
-            disabled={form.formState.isSubmitting}
+            disabled={
+              form.formState.isSubmitting ||
+              !form.formState.dirtyFields ||
+              form.formState.disabled
+            }
           >
             Confirm order
             {form.formState.isSubmitting ? (

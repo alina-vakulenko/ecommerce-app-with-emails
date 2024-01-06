@@ -12,7 +12,7 @@ const Navbar = () => {
   const showSearchInput = pathname === "/";
 
   return (
-    <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
+    <nav>
       <MaxWidthWrapper>
         <div className="flex items-center justify-between h-14 border-b border-zinc-200">
           <NavLink
@@ -21,7 +21,7 @@ const Navbar = () => {
               size: "icon",
             })}
           >
-            {<ShoppingBag />}
+            <ShoppingBag />
           </NavLink>
           <div className="flex items-center space-x-2">
             {showSearchInput ? <ProductsSearchInput /> : null}

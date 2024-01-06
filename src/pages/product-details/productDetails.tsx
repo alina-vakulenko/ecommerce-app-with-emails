@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
+import { StarIcon } from "lucide-react";
 
 const ProductDetailsPage = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ const ProductDetailsPage = () => {
     e.preventDefault();
     dispatch(productAdded(product));
     toast({
-      title: "Item added to the cart",
+      title: "Item was added to the cart",
       description: product.title,
     });
   };
@@ -37,9 +38,21 @@ const ProductDetailsPage = () => {
         <div className="space-y-8">
           <div className="space-y-2">
             <h1 className="font-semibold text-2xl">{product.title}</h1>
-            <Badge variant="secondary" className="capitalize p-2 text-md">
-              {product.category}
-            </Badge>
+            <div className="flex justify-between">
+              <Badge variant="secondary" className="capitalize p-2 text-sm">
+                {product.category}
+              </Badge>
+              <Badge
+                variant="secondary"
+                className="capitalize px-3 text-sm flex items-center gap-4"
+              >
+                Rating
+                <span className="flex items-center gap-1">
+                  <StarIcon />
+                  {product.rating.rate}
+                </span>
+              </Badge>
+            </div>
           </div>
           <h2 className="text-muted-foreground leading-5">
             {product.description}

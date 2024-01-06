@@ -27,7 +27,7 @@ const ProductCard = ({ data }: ProductCardProps) => {
     e.preventDefault();
     dispatch(productAdded(data));
     toast({
-      title: "Item added to the cart",
+      title: "Item was added to the cart",
       description: data.title,
     });
   };

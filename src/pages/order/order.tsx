@@ -10,7 +10,7 @@ import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { useToast } from "@/components/ui/use-toast";
 import CartItems from "@/components/cart/CartItems";
 import OrderConfirmedEmail from "@/emails/OrderConfirmed";
-import OrderForm, { FormInputs } from "./components/OrderForm";
+import OrderForm, { FORM_DATA_KEY, FormInputs } from "./components/OrderForm";
 
 const OrderPage = () => {
   const dispatch = useAppDispatch();
@@ -47,7 +47,7 @@ const OrderPage = () => {
       cart: {
         items: cart.cart,
         quantity: cart.totalQuantity,
-        totalPrice: cart.totalPrice,
+        totalPrice: "$" + cart.totalPrice,
       },
     };
 
@@ -60,6 +60,7 @@ const OrderPage = () => {
         description: "You will recieve order details on the provided email",
       });
       dispatch(cartCleared());
+      localStorage.removeItem(FORM_DATA_KEY);
     } catch {
       toast({
         title: "Failed to send email",
