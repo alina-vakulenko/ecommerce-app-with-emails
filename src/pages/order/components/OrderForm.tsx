@@ -116,11 +116,7 @@ const OrderForm = ({ onSubmit }: OrderFormProps) => {
           <Button
             type="submit"
             className="flex gap-1"
-            disabled={
-              form.formState.isSubmitting ||
-              !form.formState.dirtyFields ||
-              form.formState.disabled
-            }
+            disabled={form.formState.isSubmitting}
           >
             Confirm order
             {form.formState.isSubmitting ? (

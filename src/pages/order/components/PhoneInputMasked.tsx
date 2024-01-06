@@ -1,5 +1,6 @@
+import { useRef } from "react";
 import { Control } from "react-hook-form";
-import InputMask from "react-input-mask";
+import InputMask, { ReactInputMask } from "react-input-mask";
 import {
   FormControl,
   FormField,
@@ -15,6 +16,8 @@ interface PhoneInputProps {
 }
 
 const PhoneInputMasked = ({ control }: PhoneInputProps) => {
+  const inputRef = useRef<ReactInputMask | null>(null);
+
   return (
     <FormField
       control={control}
@@ -25,6 +28,7 @@ const PhoneInputMasked = ({ control }: PhoneInputProps) => {
           <FormControl>
             <InputMask
               {...field}
+              ref={(el) => (inputRef.current = el)}
               mask="+999 (99) 999-99-99"
               maskPlaceholder="_"
               alwaysShowMask
